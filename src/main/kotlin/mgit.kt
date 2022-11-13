@@ -7,26 +7,24 @@ import java.security.MessageDigest
 import java.io.PrintWriter
 
 fun main(args: Array<String>) {
-    println("Mgit it is!")
 
-    // Try adding program arguments via Run/Debug configuration.
-    // Learn more about running applications: https://www.jetbrains.com/help/idea/running-applications.html.
+    //Initialize empty mgit directory
     if(args[0]=="init") {
-        println("init!")
         val path = ".mgit"
-        println(Paths.get(path))
         if (Files.exists(Paths.get(path))) {
-            println("Mgit is already initialized!!")
+            println("Mgit repository is already initialized!!")
         }
-        else
+        else{
+            println("Initialized empty mgit repository in ${Paths.get(path)}")
             Files.createDirectory(Paths.get(path))
+        }
+
     }
     else if(args[0]=="hash-object"){
 
         //Read file
         val bufferedReader: BufferedReader = File(args[1]).bufferedReader()
         val inputString = bufferedReader.use { it.readText() }
-        println(inputString)
 
         // sha-1 calculated
         val md = MessageDigest.getInstance("SHA-1")
@@ -47,24 +45,17 @@ fun main(args: Array<String>) {
         var file = File(".mgit/objects/$hashtext")
         val isNewFileCreated :Boolean = file.createNewFile()
         if(isNewFileCreated){
-            println("$hashtext is created successfully.")
             val writer = PrintWriter(".mgit/objects/$hashtext")
             writer.append(inputString)
             writer.close()
         } else{
             println("$hashtext already exists.")
         }
-
     }
     else if(args[0]=="cat-file"){
-
         var file = ".mgit\\objects\\" + args[1]
-        println(file)
         val output = File(file).readText(Charsets.UTF_8)
-
         println(output)
 
     }
-
-    println("Program arguments: ${args.joinToString()}")
 }
